@@ -716,6 +716,26 @@ tr:hover td{background:rgba(76,141,255,0.03);}
 }
 .live-video-fallback-icon{font-size:34px;line-height:1;}
 .live-video-fallback p{font-size:13px;color:var(--muted);line-height:1.5;max-width:360px;}
+/* ---------- GAME CLOCK (basketball / football / futsal) ---------- */
+.game-clock-panel{margin-top:16px;padding:16px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,0.03);text-align:center;}
+.game-clock-rule{font-size:11px;color:var(--muted-2);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.06em;}
+.game-clock-period{font-family:var(--font-display);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-size:13px;margin-top:8px;}
+.game-clock-time{font-family:var(--font-mono);font-size:52px;font-weight:700;color:var(--lime);line-height:1.1;margin:4px 0 2px;}
+.game-clock-time.paused{opacity:.6;}
+.game-clock-time.end{color:var(--danger);opacity:1;}
+.game-clock-note{font-size:12px;color:var(--muted);min-height:16px;margin-bottom:10px;}
+.game-clock-controls{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.game-clock-controls .btn{flex:1 1 120px;}
+.game-clock-setting{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;font-size:12px;color:var(--muted);}
+.game-clock-setting input{width:70px;text-align:center;}
+.live-stage-clock{font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--text);background:rgba(0,0,0,.35);border:1px solid var(--line);padding:4px 14px;border-radius:999px;letter-spacing:.04em;}
+.live-stage-clock.paused{opacity:.7;}
+.live-stage-clock.end{color:var(--danger);}
+.live-stage.has-video .live-stage-clock{position:absolute;top:14px;right:14px;z-index:3;font-size:16px;}
+.pill-clock{background:rgba(255,184,77,0.16);color:#FFB84D;font-family:var(--font-mono);}
+.pill-clock.paused{opacity:.75;}
+.pill-clock.end{color:var(--danger);}
+@media(max-width:600px){.game-clock-time{font-size:44px;}}
 /* Public QR live page: video sits above the score */
 #gate-public-live .gate-inner{max-width:720px;}
 .public-live-video{
@@ -768,6 +788,26 @@ tr:hover td{background:rgba(76,141,255,0.03);}
 .live-chat-cheers{display:flex;gap:8px;padding:10px 18px 0;border-top:1px solid var(--line);}
 .live-chat-cheer-btn{flex:1;min-width:0;background:rgba(76,141,255,0.12);border:1px solid rgba(76,141,255,0.35);color:var(--text);border-radius:10px;padding:8px 8px;font-size:12.5px;font-weight:700;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .live-chat-cheer-btn:hover{border-color:var(--lime);background:rgba(76,141,255,0.22);}
+
+/* ---------- PEOPLE LIST ROWS: bigger tappable profile photo + stacked info lines ---------- */
+.avatar.avatar-lg{width:72px;height:72px;border-radius:16px;font-size:24px;}
+.avatar.has-photo{cursor:zoom-in;transition:transform .15s, box-shadow .15s;}
+.avatar.has-photo:hover{transform:scale(1.04);box-shadow:0 0 0 2px var(--lime);}
+.reg-meta.rich{display:flex;align-items:flex-start;gap:16px;min-width:0;flex:1;}
+.reg-info.rich{flex:1;min-width:0;}
+.reg-info.rich .name{font-size:17px;font-weight:700;line-height:1.25;}
+.info-list{display:flex;flex-direction:column;gap:3px;margin-top:5px;}
+.info-list .line{color:var(--muted);font-size:12.5px;line-height:1.4;word-break:break-word;}
+.info-list .line.main{color:var(--text);font-size:13px;font-weight:500;}
+.info-list .line b{color:var(--muted-2);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin-right:5px;}
+.photo-viewer-overlay{
+  display:none;position:fixed;inset:0;z-index:950;background:rgba(2,4,10,0.92);
+  backdrop-filter:blur(8px);align-items:center;justify-content:center;flex-direction:column;padding:20px;cursor:zoom-out;
+}
+.photo-viewer-overlay.open{display:flex;}
+.photo-viewer-overlay img{max-width:min(92vw,720px);max-height:80vh;border-radius:14px;object-fit:contain;box-shadow:0 20px 60px rgba(0,0,0,0.6);}
+.photo-viewer-name{margin-top:14px;color:#fff;font-weight:600;font-size:15px;}
+.photo-viewer-close{position:absolute;top:16px;right:16px;background:var(--panel-2);border:1px solid var(--line);color:var(--text);width:38px;height:38px;border-radius:10px;font-size:18px;line-height:1;cursor:pointer;}
 
 /* ---------- TEAM ROSTER MODAL (new — opened by clicking a team card in Participating Teams / Teams) ---------- */
 .team-card-clickable{cursor:pointer;transition:border-color .15s, transform .15s;}
@@ -1099,13 +1139,12 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
     <div id="register-error" class="error-msg">Please enter your full name and a valid email.</div>
     <label style="display:block;font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;">Select your role</label>
     <div class="role-select" id="role-select">
-      <button class="role-opt selected" data-role="Player" onclick="pickRole(this)">Player</button>
-      <button class="role-opt" data-role="Coach" onclick="pickRole(this)">Coach</button>
+      <button class="role-opt selected" data-role="Coach" onclick="pickRole(this)">Coach</button>
       <button class="role-opt" data-role="Official" onclick="pickRole(this)">Official</button>
     </div>
     <div class="field"><label>Full Name <span class="req">*</span></label><input type="text" id="reg-name" placeholder="Juan Dela Cruz" autocomplete="off" oninput="checkRegName()"><div class="reg-hint" id="reg-name-hint" style="color:var(--danger);display:none;"></div></div>
     <div class="field-row">
-      <div class="field"><label>Email <span class="req">*</span></label><input type="email" id="reg-email" placeholder="you@email.com"><div class="reg-hint" id="reg-email-hint"></div></div>
+      <div class="field"><label>Email <span class="req">*</span></label><input type="email" id="reg-email" placeholder="anyname@gmail.com"><div class="reg-hint" id="reg-email-hint"></div></div>
       <div class="field"><label>Phone <span class="req" id="reg-phone-req">*</span></label><input type="tel" id="reg-phone" placeholder="09XXXXXXXXX" inputmode="numeric" maxlength="11" pattern="09[0-9]{9}" autocomplete="off" oninput="this.value=this.value.replace(/\D/g,'').slice(0,11)"></div>
     </div>
 
@@ -1127,84 +1166,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
       <input type="password" id="reg-password" placeholder="Minimum 6 characters">
     </div>
 
-    <!-- Player only: coach, personal info, school, ID verification, emergency contact, consent -->
-    <div id="reg-player-section">
-      <div class="reg-section-title" style="margin-top:8px;">1 · Your Coach &amp; Team</div>
-      <div class="field">
-        <label>Select your coach <span class="req">*</span></label>
-        <select id="reg-coach" onchange="onRegCoachChange()"><option value="">— Select your coach —</option></select>
-        <div class="reg-hint" id="reg-coach-hint"></div>
-      </div>
-
-      <div class="reg-section-title">2 · Personal Information</div>
-      <div class="field-row">
-        <div class="field"><label>Date of Birth <span class="req">*</span></label><input type="date" id="reg-dob"></div>
-        <div class="field"><label>Sex <span class="req">*</span></label>
-          <select id="reg-gender"><option value="">— Select —</option><option>Male</option><option>Female</option><option>Prefer not to say</option></select>
-        </div>
-      </div>
-      <div class="field"><label>Home Address <span class="req">*</span></label>
-        <textarea id="reg-address" placeholder="House no. / Street, Barangay, City / Municipality, Province"></textarea>
-      </div>
-
-      <div class="reg-section-title">3 · School Information</div>
-      <div class="field-row">
-        <div class="field"><label>School / Institution <span class="req">*</span></label><input type="text" id="reg-school" placeholder="e.g. Tangub City Global College"></div>
-        <div class="field"><label>School ID Number <span class="req">*</span></label><input type="text" id="reg-student-id" placeholder="e.g. 2023-00123"></div>
-      </div>
-      <div class="field-row">
-        <div class="field"><label>Course / Program <span class="req">*</span></label><input type="text" id="reg-course" placeholder="e.g. BS Computer Science"></div>
-        <div class="field"><label>Year Level <span class="req">*</span></label>
-          <select id="reg-year">
-            <option value="">— Select —</option>
-            <option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option><option>5th Year +</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="reg-section-title">4 · Identity Verification</div>
-      <p class="reg-hint" style="margin:-4px 0 12px;">Upload clear photos so your coach can verify you. Your name, photo and school ID number must be readable. Images are compressed automatically.</p>
-      <div class="id-drop-row">
-        <label class="photo-drop">
-          <img id="reg-idfront-preview" class="photo-preview" alt="School ID front preview">
-          <span class="photo-drop-text" id="reg-idfront-text">🪪 School ID — FRONT <span class="req">*</span></span>
-          <span class="photo-drop-filename" id="reg-idfront-filename"></span>
-          <input type="file" accept="image/*" onchange="handleRegImage(this,'idFront','reg-idfront')">
-        </label>
-        <label class="photo-drop">
-          <img id="reg-idback-preview" class="photo-preview" alt="School ID back preview">
-          <span class="photo-drop-text" id="reg-idback-text">🪪 School ID — BACK (optional)</span>
-          <span class="photo-drop-filename" id="reg-idback-filename"></span>
-          <input type="file" accept="image/*" onchange="handleRegImage(this,'idBack','reg-idback')">
-        </label>
-      </div>
-      <label class="photo-drop">
-        <img id="reg-pphoto-preview" class="photo-preview" alt="Your photo preview">
-        <span class="photo-drop-text" id="reg-pphoto-text">📷 Your photo — clear face, no filter <span class="req">*</span></span>
-        <span class="photo-drop-filename" id="reg-pphoto-filename"></span>
-        <input type="file" accept="image/*" onchange="handleRegImage(this,'photo','reg-pphoto')">
-      </label>
-
-      <div class="reg-section-title">5 · Sports Details</div>
-      <div class="field-row">
-        <div class="field"><label>Position</label><input type="text" id="reg-position" placeholder="Optional · e.g. Point Guard"></div>
-        <div class="field"><label>Preferred Jersey No.</label><input type="text" id="reg-jersey" placeholder="Optional · e.g. 23"></div>
-      </div>
-
-      <div class="reg-section-title">6 · Emergency Contact &amp; Health</div>
-      <div class="field-row">
-        <div class="field"><label>Contact Person <span class="req">*</span></label><input type="text" id="reg-em-name" placeholder="Parent / guardian / relative"></div>
-        <div class="field"><label>Relationship <span class="req">*</span></label><input type="text" id="reg-em-rel" placeholder="e.g. Mother"></div>
-      </div>
-      <div class="field"><label>Contact Number <span class="req">*</span></label><input type="tel" id="reg-em-phone" placeholder="09XXXXXXXXX" inputmode="numeric" maxlength="11" pattern="09[0-9]{9}" autocomplete="off" oninput="this.value=this.value.replace(/\D/g,'').slice(0,11)"></div>
-      <div class="field"><label>Medical conditions / allergies (optional)</label>
-        <textarea id="reg-medical" placeholder="Anything your coach should know in case of an emergency"></textarea>
-      </div>
-
-      <div class="reg-section-title">7 · Confirmation</div>
-      <label class="check-row"><input type="checkbox" id="reg-consent-truth"><span>I confirm that all information and documents I submitted are true and belong to me. If I am under 18, my parent or guardian allows me to join.</span></label>
-      <label class="check-row"><input type="checkbox" id="reg-consent-privacy"><span>I agree that my personal information and ID will be stored and viewed by my coach and the tournament administrator only for tournament registration and verification (Data Privacy Act of 2012).</span></label>
-    </div>
+    <!-- Players no longer register themselves: their Coach registers them from My Team (see "Register a Player"). -->
 
     <!-- Coach / Official: optional profile photo -->
     <div id="reg-generic-photo" style="display:none;">
@@ -1229,6 +1191,24 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
     <span class="pill pill-live" id="public-live-status" style="margin-top:8px;display:inline-block;">LIVE</span>
 
     <div class="public-live-video" id="public-live-video" style="display:none;"></div>
+
+    <!-- Game clock — only shown for sports that use one (Basketball / Football / Futsal). Controlled right here by whoever handles the live score. -->
+    <div class="game-clock-panel" id="public-live-clock-panel" style="display:none;">
+      <div class="game-clock-rule" id="public-clock-rule"></div>
+      <div class="game-clock-period" id="public-clock-period"></div>
+      <div class="game-clock-time" id="public-clock-time" data-clock="" data-clock-mode="time">--:--</div>
+      <div class="game-clock-note" id="public-clock-note"></div>
+      <div class="game-clock-controls" id="public-clock-controls">
+        <button class="btn btn-primary" id="clock-btn-toggle" onclick="clockToggle()">▶ Start Game</button>
+        <button class="btn btn-ghost" id="clock-btn-next" onclick="clockNextPeriod()">⏭ Next Period</button>
+        <button class="btn btn-ghost" onclick="clockAdjust()">✎ Adjust Time</button>
+        <button class="btn btn-ghost" onclick="clockResetPeriod()">↺ Reset Period</button>
+      </div>
+      <div class="game-clock-setting" id="public-clock-setting">
+        <label for="public-clock-minutes">Minutes per period</label>
+        <input type="number" id="public-clock-minutes" min="1" max="90" step="1" onchange="clockSetMinutes(this.value)">
+      </div>
+    </div>
 
     <div class="qr-score-row" id="public-live-score-row" style="margin-top:20px;">
       <div class="qr-score-team">
@@ -1558,6 +1538,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
 
       <!-- ===== REGISTRATIONS (Admin) ===== -->
       <section class="screen" id="screen-registrations">
+        <div class="card" id="player-window-card" style="display:none;margin-bottom:16px;"></div>
         <div class="card" id="email-status-card" style="display:none;margin-bottom:16px;"></div>
         <div class="card">
           <div class="section-head" style="margin-top:0;flex-wrap:wrap;gap:10px;">
@@ -1662,6 +1643,8 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
             <div class="field"><label>Minimum Players per Team</label><input type="number" id="gen-min-players" value="5" min="1"></div>
           </div>
           <p class="topbar-sub" style="text-transform:none;margin-top:-8px;margin-bottom:4px;">A coach's team must have at least this many players on its roster before it can join this tournament.</p>
+          <div class="field" style="margin-top:12px;"><label>Team Registration Deadline <span class="req">*</span></label><input type="datetime-local" id="gen-reg-deadline"></div>
+          <p class="topbar-sub" style="text-transform:none;margin-top:-8px;margin-bottom:4px;">Coaches can register their team for this tournament only until this date and time. You can change it later in Tournaments.</p>
           <label style="display:block;font-size:12px;color:var(--muted);margin:18px 0 10px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;">Format</label>
           <div class="format-grid" id="format-grid">
             <div class="format-opt selected" data-f="Round Robin" onclick="pickFormat(this)"><h3>Round Robin</h3><p>Every team plays every other team once.</p></div>
@@ -1787,9 +1770,90 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
             </div>
           </div>
 
-                    <div class="section-head"><h2>Player Registrations</h2><span class="topbar-sub" id="myteam-pending-count"></span></div>
+          <div class="section-head"><h2>Register a Player</h2><span class="topbar-sub" id="cp-sport-label" style="text-transform:none;"></span></div>
           <div class="card" style="margin-bottom:22px;">
-            <p class="topbar-sub" style="text-transform:none;margin-bottom:10px;">Players who chose you as their coach. Review their details and school ID, then accept — accepted players join your roster automatically. Only you can accept or reject your own players.</p>
+            <p class="topbar-sub" id="cp-window-status" style="text-transform:none;margin-bottom:12px;"></p>
+            <div id="cp-form" style="display:none;">
+              <div id="cp-error" class="error-msg" style="display:none;"></div>
+              <div class="reg-section-title" style="margin-top:0;">1 · Player</div>
+              <div class="field"><label>Full Name <span class="req">*</span></label><input type="text" id="cp-name" placeholder="Juan Dela Cruz" autocomplete="off"></div>
+              <div class="field-row">
+                <div class="field"><label>Email (optional)</label><input type="email" id="cp-email" placeholder="anyname@gmail.com"></div>
+                <div class="field"><label>Phone <span class="req">*</span></label><input type="tel" id="cp-phone" placeholder="09XXXXXXXXX" inputmode="numeric" maxlength="11" autocomplete="off" oninput="this.value=this.value.replace(/\D/g,'').slice(0,11)"></div>
+              </div>
+
+              <div class="reg-section-title">2 · Personal Information</div>
+              <div class="field-row">
+                <div class="field"><label>Date of Birth <span class="req">*</span></label><input type="date" id="cp-dob"></div>
+                <div class="field"><label>Sex <span class="req">*</span></label>
+                  <select id="cp-gender"><option value="">— Select —</option><option>Male</option><option>Female</option><option>Prefer not to say</option></select>
+                </div>
+              </div>
+              <div class="field"><label>Home Address <span class="req">*</span></label>
+                <textarea id="cp-address" placeholder="House no. / Street, Barangay, City / Municipality, Province"></textarea>
+              </div>
+
+              <div class="reg-section-title">3 · School Information</div>
+              <div class="field-row">
+                <div class="field"><label>School / Institution <span class="req">*</span></label><input type="text" id="cp-school" placeholder="e.g. Tangub City Global College"></div>
+                <div class="field"><label>School ID Number <span class="req">*</span></label><input type="text" id="cp-student-id" placeholder="e.g. 2023-00123"></div>
+              </div>
+              <div class="field-row">
+                <div class="field"><label>Course / Program <span class="req">*</span></label><input type="text" id="cp-course" placeholder="e.g. BS Computer Science"></div>
+                <div class="field"><label>Year Level <span class="req">*</span></label>
+                  <select id="cp-year"><option value="">— Select —</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option><option>5th Year +</option></select>
+                </div>
+              </div>
+
+              <div class="reg-section-title">4 · Identity Verification</div>
+              <p class="reg-hint" style="margin:-4px 0 12px;">Upload clear photos. The name, photo and school ID number must be readable. Images are compressed automatically.</p>
+              <div class="id-drop-row">
+                <label class="photo-drop">
+                  <img id="cp-idfront-preview" class="photo-preview" alt="School ID front preview">
+                  <span class="photo-drop-text" id="cp-idfront-text">🪪 School ID — FRONT <span class="req">*</span></span>
+                  <span class="photo-drop-filename" id="cp-idfront-filename"></span>
+                  <input type="file" accept="image/*" onchange="handleCpImage(this,'idFront','cp-idfront')">
+                </label>
+                <label class="photo-drop">
+                  <img id="cp-idback-preview" class="photo-preview" alt="School ID back preview">
+                  <span class="photo-drop-text" id="cp-idback-text">🪪 School ID — BACK (optional)</span>
+                  <span class="photo-drop-filename" id="cp-idback-filename"></span>
+                  <input type="file" accept="image/*" onchange="handleCpImage(this,'idBack','cp-idback')">
+                </label>
+              </div>
+              <label class="photo-drop">
+                <img id="cp-photo-preview" class="photo-preview" alt="Player photo preview">
+                <span class="photo-drop-text" id="cp-photo-text">📷 Player photo — clear face, no filter <span class="req">*</span></span>
+                <span class="photo-drop-filename" id="cp-photo-filename"></span>
+                <input type="file" accept="image/*" onchange="handleCpImage(this,'photo','cp-photo')">
+              </label>
+
+              <div class="reg-section-title">5 · Sports Details</div>
+              <div class="field-row">
+                <div class="field"><label>Position</label><input type="text" id="cp-position" placeholder="Optional · e.g. Point Guard"></div>
+                <div class="field"><label>Preferred Jersey No.</label><input type="text" id="cp-jersey" placeholder="Optional · e.g. 23"></div>
+              </div>
+
+              <div class="reg-section-title">6 · Emergency Contact &amp; Health</div>
+              <div class="field-row">
+                <div class="field"><label>Contact Person <span class="req">*</span></label><input type="text" id="cp-em-name" placeholder="Parent / guardian / relative"></div>
+                <div class="field"><label>Relationship <span class="req">*</span></label><input type="text" id="cp-em-rel" placeholder="e.g. Mother"></div>
+              </div>
+              <div class="field"><label>Contact Number <span class="req">*</span></label><input type="tel" id="cp-em-phone" placeholder="09XXXXXXXXX" inputmode="numeric" maxlength="11" autocomplete="off" oninput="this.value=this.value.replace(/\D/g,'').slice(0,11)"></div>
+              <div class="field"><label>Medical conditions / allergies (optional)</label>
+                <textarea id="cp-medical" placeholder="Anything that matters in case of an emergency"></textarea>
+              </div>
+
+              <div class="reg-section-title">7 · Confirmation</div>
+              <label class="check-row"><input type="checkbox" id="cp-consent"><span>I confirm that the information and documents I submitted are true, that the player (and their parent or guardian if under 18) allows me to register them, and that their information and ID may be stored and viewed by me and the tournament administrator only for tournament registration (Data Privacy Act of 2012).</span></label>
+              <label class="check-row"><input type="checkbox" id="cp-add-roster" checked><span>Add this player to my team roster right away</span></label>
+              <button class="btn btn-primary btn-block" onclick="coachRegisterPlayer()">Register Player</button>
+            </div>
+          </div>
+
+          <div class="section-head"><h2>Pending Player Requests</h2><span class="topbar-sub" id="myteam-pending-count"></span></div>
+          <div class="card" style="margin-bottom:22px;">
+            <p class="topbar-sub" style="text-transform:none;margin-bottom:10px;">Older player requests that were sent to you before coaches started registering their own players. New players are registered by you in “Register a Player” above.</p>
             <div id="myteam-pending-list"></div>
           </div>
 
@@ -1871,6 +1935,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
           <div class="live-stage-score" id="live-viewer-score">-</div>
           <div class="live-stage-team" id="live-viewer-team-b">Team B</div>
         </div>
+        <div class="live-stage-clock" id="live-viewer-clock" data-clock="" style="display:none;"></div>
         <div class="live-stage-play" id="live-stage-play">▶</div>
         <div class="live-stage-preview" id="live-stage-preview">Stream Preview</div>
       </div>
@@ -1933,6 +1998,13 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
       <button class="back-link" onclick="cancelEmailVerify()" style="margin:0;">Change email</button>
     </div>
   </div>
+</div>
+
+<!-- ================= PROFILE PHOTO VIEWER (tap any profile picture) ================= -->
+<div class="photo-viewer-overlay" id="photo-viewer-overlay" onclick="closePhotoViewer()">
+  <button class="photo-viewer-close" onclick="closePhotoViewer()" aria-label="Close">✕</button>
+  <img id="photo-viewer-img" alt="Profile photo">
+  <div class="photo-viewer-name" id="photo-viewer-name"></div>
 </div>
 
 <!-- ================= PLAYER DETAILS MODAL (admin sees accepted players · coach sees own players) ================= -->
@@ -2502,7 +2574,7 @@ async function attachRealtimeListeners(){
   // so nothing already in Firestore gets mistaken for a brand-new registration.
   firestoreUnsubs.forEach(u=>{ try{ u(); }catch(e){} });
   firestoreUnsubs = [];
-  await Promise.all([...Object.keys(FS_COLLECTIONS).map(listenToCollection), listenToBracketDoc(), listenToEmailConfigDoc()]);
+  await Promise.all([...Object.keys(FS_COLLECTIONS).map(listenToCollection), listenToBracketDoc(), listenToEmailConfigDoc(), listenToPlayerRegDoc()]);
   bumpIdCounters();
   knownRegistrationIds = new Set(registrations.map(r=>r.id));
   regNotificationsArmed = true;
@@ -2616,7 +2688,7 @@ function showGate(id){
   document.body.classList.remove('app-entered');
   document.querySelectorAll('.gate').forEach(g=>g.style.display='none');
   document.getElementById(id).style.display='flex';
-  if(id==='gate-register'){ const selRole=document.querySelector('.role-opt.selected'); applyRoleUI(selRole?selRole.dataset.role:'Player'); }
+  if(id==='gate-register'){ const selRole=document.querySelector('.role-opt.selected'); applyRoleUI(selRole?selRole.dataset.role:'Coach'); }
   document.getElementById('admin-error').style.display='none';
   document.getElementById('register-error').style.display='none';
   const coachErr = document.getElementById('coach-error');
@@ -2795,7 +2867,7 @@ const EMAIL_CONFIG = {
   serviceId: '',               // e.g. 'service_abc123'
   templateId: '',              // e.g. 'template_xyz789'
   publicKey: '',               // e.g. 'AbCdEf123456'
-  requireVerification: true,   // true  = registrants must enter a 6-digit code sent to their email
+  requireVerification: false,  // true  = registrants must enter a 6-digit code sent to their email
                                // false = no code step (the address is still checked, and still emailed on acceptance)
   appName: 'TournamentPro'
 };
@@ -3086,7 +3158,7 @@ function applyEmailConfigDoc(d){
   EMAIL_CONFIG.serviceId = String(d.serviceId || '');
   EMAIL_CONFIG.templateId = String(d.templateId || '');
   EMAIL_CONFIG.publicKey = String(d.publicKey || '');
-  EMAIL_CONFIG.requireVerification = d.requireVerification !== false;
+  EMAIL_CONFIG.requireVerification = false; // email code verification is turned off — any name@gmail.com is accepted
   renderEmailStatusCard();
   refreshEmailHint();
 }
@@ -3107,10 +3179,7 @@ function listenToEmailConfigDoc(){
 function refreshEmailHint(){
   const h = document.getElementById('reg-email-hint');
   if(!h) return;
-  h.textContent = !emailEnabled() ? 'Use a real email address you can open.'
-    : EMAIL_CONFIG.requireVerification
-      ? 'Use a real email you can open — after you press Submit we send a 6-digit code to confirm it, and you are emailed when you are accepted.'
-      : 'Use a real email you can open — you will be emailed when you are accepted.';
+  h.textContent = 'You can use any name you like, as long as it ends with @gmail.com (e.g. juandelacruz@gmail.com).';
 }
 async function saveEmailConfig(){
   if(currentRole !== 'admin'){ showToast('Only the Administrator can change the email settings.'); return; }
@@ -3239,6 +3308,313 @@ function checkRegName(){
     hint.style.display = 'none';
   }
 }
+/* ================= REGISTRATION SCHEDULES (set by the Administrator) =================
+   1) PLAYER_REG  — the window in which a Coach may register players. Stored in Firestore (meta/playerRegWindow)
+      so every device sees it live. Closed by default until the admin sets a schedule; closes by itself at the
+      deadline and only opens again when the admin saves a new schedule.
+   2) Tournament team deadline — tournament.regDeadline (saved with the tournament like every other field).
+   Everything here is additive: it only adds checks in front of the existing registration actions. */
+const PLAYER_REG = {open:false, start:'', deadline:'', updatedAt:'', updatedBy:''};
+const playerRegDocRef = () => db.collection('meta').doc('playerRegWindow');
+function fmtDateTime(v){
+  if(!v) return '';
+  const d = new Date(v);
+  if(isNaN(d.getTime())) return '';
+  return d.toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'});
+}
+function applyPlayerRegDoc(d){
+  PLAYER_REG.open = !!d.open;
+  PLAYER_REG.start = String(d.start || '');
+  PLAYER_REG.deadline = String(d.deadline || '');
+  PLAYER_REG.updatedAt = String(d.updatedAt || '');
+  PLAYER_REG.updatedBy = String(d.updatedBy || '');
+  try{ renderPlayerWindowCard(); renderCoachRegisterCard(); }catch(e){}
+}
+function listenToPlayerRegDoc(){
+  return new Promise(resolve=>{
+    let first = true;
+    const unsub = playerRegDocRef().onSnapshot(doc=>{
+      if(doc.exists) applyPlayerRegDoc(doc.data() || {});
+      if(first){ first = false; resolve(); }
+    }, err=>{
+      console.error('Firestore player-registration-window listener error:', err);
+      noteQuotaError(err);
+      if(first){ first = false; resolve(); }
+    });
+    firestoreUnsubs.push(unsub);
+  });
+}
+/* state: 'open' | 'notset' | 'closed' | 'notyet' | 'ended' */
+function playerRegState(){
+  if(!PLAYER_REG.deadline) return {state:'notset', open:false};
+  if(!PLAYER_REG.open) return {state:'closed', open:false};
+  const now = Date.now();
+  if(PLAYER_REG.start){ const st = new Date(PLAYER_REG.start).getTime(); if(!isNaN(st) && now < st) return {state:'notyet', open:false}; }
+  const dl = new Date(PLAYER_REG.deadline).getTime();
+  if(!isNaN(dl) && now >= dl) return {state:'ended', open:false};
+  return {state:'open', open:true};
+}
+function playerRegMessage(){
+  const st = playerRegState().state;
+  if(st === 'open') return `Player registration is open until ${fmtDateTime(PLAYER_REG.deadline)}.`;
+  if(st === 'notyet') return `Player registration opens on ${fmtDateTime(PLAYER_REG.start)} and closes ${fmtDateTime(PLAYER_REG.deadline)}.`;
+  if(st === 'ended') return `Player registration closed on ${fmtDateTime(PLAYER_REG.deadline)}. Please wait for the Administrator to set a new registration schedule.`;
+  if(st === 'closed') return 'Player registration is closed by the Administrator. Please wait for a new registration schedule.';
+  return 'Player registration is not open yet. The Administrator has not set a registration schedule.';
+}
+function renderPlayerWindowCard(){
+  const el = document.getElementById('player-window-card');
+  if(!el) return;
+  if(currentRole !== 'admin'){ el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  const st = playerRegState();
+  const sig = [st.state, PLAYER_REG.open, PLAYER_REG.start, PLAYER_REG.deadline].join('|');
+  if(el.dataset.sig === sig) return; // never redraw while the admin is typing in the form
+  el.dataset.sig = sig;
+  const pill = st.state === 'open' ? '<span style="color:var(--mint);">OPEN</span>'
+    : st.state === 'notyet' ? '<span style="color:#FFB84D;">SCHEDULED</span>'
+    : '<span style="color:var(--danger);">CLOSED</span>';
+  el.innerHTML = `
+    <h3 style="font-size:14px;margin-bottom:6px;">🗓️ Player Registration Schedule — ${pill}</h3>
+    <p class="rep-note" style="margin:0 0 12px;">${escH(playerRegMessage())} Coaches can register their own players only while this schedule is open. After the deadline it closes automatically and stays closed until you save a new schedule here.</p>
+    <div class="field-row">
+      <div class="field"><label>Opens (optional — blank = open right now)</label><input type="datetime-local" id="pw-start" value="${escAttr(PLAYER_REG.start)}"></div>
+      <div class="field"><label>Deadline <span class="req">*</span></label><input type="datetime-local" id="pw-deadline" value="${escAttr(PLAYER_REG.deadline)}"></div>
+    </div>
+    <div class="rep-actions">
+      <button class="btn btn-primary btn-sm" onclick="savePlayerRegWindow()">${st.state === 'open' || st.state === 'notyet' ? 'Update schedule' : 'Save schedule &amp; open registration'}</button>
+      ${st.state === 'open' || st.state === 'notyet' ? '<button class="btn btn-danger btn-sm" onclick="closePlayerRegWindow()">Close registration now</button>' : ''}
+    </div>`;
+}
+async function writePlayerRegDoc(data){
+  applyPlayerRegDoc(data); // show it immediately on this device
+  try{ await playerRegDocRef().set(data); return true; }
+  catch(err){
+    console.error('Saving player registration schedule failed:', err);
+    noteQuotaError(err);
+    showToastOnly('⚠ Could not save the schedule to the server: ' + String((err && err.message) || err).slice(0, 80));
+    return false;
+  }
+}
+async function savePlayerRegWindow(){
+  if(currentRole !== 'admin'){ showToast('Only the Administrator can set the player registration schedule.'); return; }
+  const start = (document.getElementById('pw-start') || {}).value || '';
+  const deadline = (document.getElementById('pw-deadline') || {}).value || '';
+  if(!deadline){ showToast('Set a registration deadline first.'); return; }
+  const dlMs = new Date(deadline).getTime();
+  if(isNaN(dlMs) || dlMs <= Date.now()){ showToast('The deadline must be a date and time in the future.'); return; }
+  if(start){
+    const stMs = new Date(start).getTime();
+    if(isNaN(stMs) || stMs >= dlMs){ showToast('The opening time must be earlier than the deadline.'); return; }
+  }
+  const ok = await writePlayerRegDoc({open:true, start, deadline, updatedAt:new Date().toISOString(), updatedBy:'Administrator'});
+  logAudit('Player Registration Schedule Set', `Coaches may register players ${start ? 'from '+fmtDateTime(start)+' ' : 'now '}until ${fmtDateTime(deadline)}.`, 'Administrator');
+  announcements.unshift({
+    id: fsIdCounter++,
+    t: '📢 Player Registration Is Open',
+    d: `Coaches can register their players in My Team → Register a Player ${start ? 'starting '+fmtDateTime(start)+' and ' : ''}until ${fmtDateTime(deadline)}. Registration closes automatically after the deadline.`,
+    forCoaches: true
+  });
+  renderPlayerWindowCard();
+  showToast(ok ? 'Player registration schedule saved ✓' : 'Schedule applied on this device only — check your connection.');
+}
+async function closePlayerRegWindow(){
+  if(currentRole !== 'admin'){ showToast('Only the Administrator can close player registration.'); return; }
+  if(!confirm('Close player registration now? Coaches will not be able to register players until you set a new schedule.')) return;
+  await writePlayerRegDoc({open:false, start:PLAYER_REG.start, deadline:PLAYER_REG.deadline, updatedAt:new Date().toISOString(), updatedBy:'Administrator'});
+  logAudit('Player Registration Closed', 'Administrator closed player registration.', 'Administrator');
+  renderPlayerWindowCard();
+  showToast('Player registration closed.');
+}
+
+/* ---- Tournament team-registration deadline (set by the admin when generating, editable afterwards) ---- */
+function tourneyRegState(t){
+  if(!t || !t.published || !t.regOpen) return 'closed';
+  if(t.regDeadline){
+    const dl = new Date(t.regDeadline).getTime();
+    if(!isNaN(dl) && Date.now() >= dl) return 'deadline';
+  }
+  return 'open';
+}
+function tourneyRegOpen(t){ return tourneyRegState(t) === 'open'; }
+function tourneyDeadlineLine(t){
+  if(!t || !t.regDeadline) return '';
+  const st = tourneyRegState(t);
+  return st === 'open' ? `Team registration closes ${fmtDateTime(t.regDeadline)}`
+    : st === 'deadline' ? `Team registration closed ${fmtDateTime(t.regDeadline)}` : '';
+}
+function saveTourneyDeadline(id){
+  if(currentRole !== 'admin'){ showToast('Only the Administrator can change a registration deadline.'); return; }
+  const t = tournaments.find(x=>x.id === id);
+  if(!t) return;
+  const inp = document.querySelector(`input[data-td="${id}"]`);
+  const v = inp ? inp.value : '';
+  if(!v){ showToast('Pick a deadline date and time first.'); return; }
+  const ms = new Date(v).getTime();
+  if(isNaN(ms)){ showToast('That date and time is not valid.'); return; }
+  t.regDeadline = v;
+  if(ms > Date.now()){
+    t.regOpen = true; // admin set a new future deadline -> registration opens again
+    logAudit('Tournament Deadline Set', `Team registration for "${t.name}" is open until ${fmtDateTime(v)}.`, 'Administrator');
+    showToast(`Team registration for "${t.name}" is open until ${fmtDateTime(v)}.`);
+  } else {
+    logAudit('Tournament Deadline Set', `Team registration deadline for "${t.name}" set to ${fmtDateTime(v)} (already passed — registration is closed).`, 'Administrator');
+    showToast('That deadline is already in the past, so registration for this tournament is closed.');
+  }
+  buildTourneyList(document.querySelector('#tourney-tabs .tab-btn.active')?.dataset.filter || 'all');
+  buildMyTeam();
+}
+function closeTourneyRegistration(id){
+  if(currentRole !== 'admin'){ showToast('Only the Administrator can close registration.'); return; }
+  const t = tournaments.find(x=>x.id === id);
+  if(!t) return;
+  if(!confirm(`Close team registration for "${t.name}" now? Coaches won't be able to join until you set a new future deadline.`)) return;
+  t.regOpen = false;
+  logAudit('Tournament Registration Closed', `Team registration for "${t.name}" was closed by the Administrator.`, 'Administrator');
+  buildTourneyList(document.querySelector('#tourney-tabs .tab-btn.active')?.dataset.filter || 'all');
+  buildMyTeam();
+  showToast(`Team registration for "${t.name}" closed.`);
+}
+
+/* ---- Live check: when a deadline passes (or the admin changes it) the screens update by themselves ---- */
+let regTickSig = null;
+function regWindowTick(){
+  if(!document.body.classList.contains('app-entered')) return;
+  const sig = playerRegState().state + '#' + tournaments.map(t=>t.id + ':' + tourneyRegState(t)).join(',');
+  if(regTickSig === null){ regTickSig = sig; return; }
+  if(sig === regTickSig) return;
+  regTickSig = sig;
+  try{
+    renderPlayerWindowCard();
+    renderCoachRegisterCard();
+    buildTourneyList(document.querySelector('#tourney-tabs .tab-btn.active')?.dataset.filter || 'all');
+    buildMyTeam();
+  }catch(e){ console.error(e); }
+}
+setInterval(regWindowTick, 15000);
+
+/* ================= COACH: REGISTER A PLAYER (only while the admin's schedule is open) ================= */
+const cpImg = {photo:null, idFront:null, idBack:null};
+async function handleCpImage(input, key, prefix){
+  const file = input.files && input.files[0];
+  if(!file) return;
+  if(!file.type.startsWith('image/')){ showToast('Please choose an image file.'); input.value = ''; return; }
+  try{
+    const isId = (key === 'idFront' || key === 'idBack');
+    const data = await compressImageToLimit(file, isId ? 1000 : 500, isId ? 260000 : 90000);
+    cpImg[key] = data;
+    const preview = document.getElementById(prefix + '-preview');
+    preview.src = data; preview.style.display = 'block';
+    document.getElementById(prefix + '-text').style.display = 'none';
+    document.getElementById(prefix + '-filename').textContent = `✓ ${file.name}`;
+  }catch(err){
+    showToast("Couldn't read that image. Please try another file.");
+    input.value = '';
+  }
+}
+function resetCpForm(){
+  cpImg.photo = null; cpImg.idFront = null; cpImg.idBack = null;
+  ['cp-photo','cp-idfront','cp-idback'].forEach(prefix=>{
+    const preview = document.getElementById(prefix + '-preview');
+    if(preview){ preview.src = ''; preview.style.display = 'none'; }
+    const text = document.getElementById(prefix + '-text'); if(text) text.style.display = '';
+    const fn = document.getElementById(prefix + '-filename'); if(fn) fn.textContent = '';
+  });
+  document.querySelectorAll('#cp-form input:not([type="checkbox"]), #cp-form textarea').forEach(e=>{ e.value = ''; });
+  document.querySelectorAll('#cp-form select').forEach(sel=>{ sel.selectedIndex = 0; });
+  const consent = document.getElementById('cp-consent'); if(consent) consent.checked = false;
+  const addRoster = document.getElementById('cp-add-roster'); if(addRoster) addRoster.checked = true;
+  const err = document.getElementById('cp-error'); if(err){ err.textContent = ''; err.style.display = 'none'; }
+}
+function renderCoachRegisterCard(){
+  const banner = document.getElementById('cp-window-status');
+  const form = document.getElementById('cp-form');
+  if(!banner || !form) return;
+  const st = playerRegState();
+  const color = st.open ? 'var(--mint)' : 'var(--danger)';
+  banner.innerHTML = `<b style="color:${color};">${st.open ? 'OPEN' : 'CLOSED'}</b> · ${escH(playerRegMessage())}`;
+  form.style.display = st.open ? 'block' : 'none';
+  const dob = document.getElementById('cp-dob');
+  if(dob) dob.max = new Date().toISOString().slice(0,10);
+  const team = getMyTeam();
+  const sportEl = document.getElementById('cp-sport-label');
+  if(sportEl) sportEl.textContent = team ? `${team.name} · ${team.sport}` : '';
+}
+function coachRegisterPlayer(){
+  const errEl = document.getElementById('cp-error');
+  const fail = msg => {
+    errEl.textContent = msg; errEl.style.display = 'block';
+    if(errEl.scrollIntoView) errEl.scrollIntoView({behavior:'smooth', block:'center'});
+  };
+  const val = id => { const e = document.getElementById(id); return e ? e.value.trim() : ''; };
+  if(currentRole !== 'coach'){ return fail('Only a Coach can register players.'); }
+  const acct = coachAccounts.find(c=>c.email === currentCoachEmail);
+  const team = getMyTeam();
+  if(!acct || !team) return fail('Create your team first before registering players.');
+  // Re-check the schedule at the moment of submitting — the deadline may have passed while the form was open.
+  if(!playerRegState().open){
+    renderCoachRegisterCard();
+    return fail(playerRegMessage());
+  }
+  const name = val('cp-name'), email = val('cp-email'), phone = val('cp-phone');
+  if(!name) return fail("Please enter the player's full name.");
+  if(email && !/^[^\s@]+@gmail\.com$/i.test(email)) return fail('If you add an email it must end with @gmail.com (or leave it blank).');
+  if(!phone) return fail("Please enter the player's phone number.");
+  if(!isValidPhone11(phone)) return fail('Phone number must be 11 digits and start with 09 (numbers only), e.g. 09171234567.');
+  if(playerNameExists(name)) return fail(`A player named "${name}" is already in the system. If it is a different person, add a middle name or initial (e.g. "Juan D. Cruz").`);
+  const dob = val('cp-dob'), gender = val('cp-gender'), address = val('cp-address');
+  const school = val('cp-school'), studentId = val('cp-student-id'), course = val('cp-course'), yearLevel = val('cp-year');
+  const emName = val('cp-em-name'), emRel = val('cp-em-rel'), emPhone = val('cp-em-phone');
+  if(!dob) return fail("Please enter the player's date of birth.");
+  const age = ageFromDob(dob);
+  if(age === null || age < 16 || age > 60) return fail('Please check the date of birth.');
+  if(!gender) return fail('Please select the sex.');
+  if(address.length < 10) return fail("Please enter the player's complete home address.");
+  if(!school || !studentId || !course || !yearLevel) return fail('Please complete the school information (school, ID number, course and year level).');
+  if(!emName || !emRel || !emPhone) return fail('Please complete the emergency contact.');
+  if(!isValidPhone11(emPhone)) return fail('Emergency contact number must be 11 digits and start with 09 (numbers only).');
+  if(!cpImg.photo) return fail('Please upload a clear photo of the player.');
+  if(!cpImg.idFront) return fail('Please upload the front of the player\'s school ID.');
+  if(!document.getElementById('cp-consent').checked) return fail('Please tick the confirmation box to continue.');
+  if(registrations.some(r=>r.role === 'Player' && r.status !== 'Rejected' && r.studentId
+      && String(r.studentId).toLowerCase() === studentId.toLowerCase()
+      && String(r.school||'').toLowerCase() === school.toLowerCase())){
+    return fail('This school ID number is already registered.');
+  }
+  errEl.style.display = 'none';
+
+  const today = new Date().toLocaleDateString('en-US',{month:'short', day:'numeric', year:'numeric'});
+  regIdCounter += 1;
+  registrations.push({
+    id: regIdCounter,
+    role: 'Player', name, email, phone,
+    team: team.name, sport: team.sport,
+    status: 'Approved', date: today,
+    photo: cpImg.photo,
+    emailVerified: false, notifyStatus: '', notifyNote: '', notifyAt: '',
+    coachEmail: acct.email, coachName: team.coach || acct.name,
+    registeredByCoach: true, reviewedBy: team.coach || acct.name, reviewedAt: today,
+    dob, age, gender, address, school, studentId, course, yearLevel,
+    position: val('cp-position'), jersey: val('cp-jersey'),
+    emergencyName: emName, emergencyRel: emRel, emergencyPhone: emPhone,
+    medical: val('cp-medical'),
+    idFront: cpImg.idFront, idBack: cpImg.idBack || '',
+    consent: true, consentAt: new Date().toISOString()
+  });
+  let addedToRoster = false;
+  const wantRoster = document.getElementById('cp-add-roster');
+  if(wantRoster && wantRoster.checked && !rosteredPlayerNames().has(name)){ team.players.push(name); addedToRoster = true; }
+  logAudit('Player Registered by Coach', `${name} registered by Coach ${team.coach || acct.name} for ${team.name}${addedToRoster ? ' and added to the roster' : ''}.`, team.coach || acct.name);
+
+  resetCpForm();
+  buildMyTeam();
+  renderRegistrationsAdmin();
+  renderDirectory();
+  renderPlayers();
+  buildDashboard();
+  showToast(`${name} registered${addedToRoster ? ' and added to ' + team.name : ' — use "Add to Roster" to put them on your team'}.`);
+}
+
 function registerSubmit(){
   const role = document.querySelector('.role-opt.selected').dataset.role;
   const val = id => { const e = document.getElementById(id); return e ? e.value.trim() : ''; };
@@ -3252,9 +3628,10 @@ function registerSubmit(){
   const needsPassword = (role === 'Coach' || role === 'Official');
   const password = needsPassword ? document.getElementById('reg-password').value : '';
 
-  const emailOk = /^\S+@\S+\.\S+$/.test(email);
-  if(!name || !emailOk) return fail('Please enter your full name and a valid email.');
-  { const quick = emailQuickCheck(email); if(quick) return fail(quick); }
+  if(role === 'Player') return fail('Players are registered by their Coach. Please ask your coach to register you.');
+  if(!name) return fail('Please enter your full name.');
+  // Email: any name is allowed (it does not have to be an existing Gmail), but it must end with @gmail.com
+  if(!/^[^\s@]+@gmail\.com$/i.test(email)) return fail('Please enter an email that ends with @gmail.com (for example juandelacruz@gmail.com).');
   if(phone && !isValidPhone11(phone)) return fail('Phone number must be 11 digits and start with 09 (numbers only), e.g. 09171234567.');
   if(role === 'Player' && playerNameExists(name)){
     return fail(`A player named "${name}" is already in the system. If that is you, you are already registered. If you are a different person with the same name, add your middle name or initial (e.g. "Juan D. Cruz").`);
@@ -3308,7 +3685,6 @@ function registerSubmit(){
     };
   }
   // Email must be real: domain lookup (+ 6-digit code when email is set up). Skipped when the browser can't make web requests.
-  if(typeof fetch === 'function' && regVerify.okEmail !== emailLc){ errEl.style.display = 'none'; regEmailGate(email); return; }
   errEl.style.display = 'none';
 
   regIdCounter += 1;
@@ -3320,7 +3696,7 @@ function registerSubmit(){
     status: 'Pending',
     date: new Date().toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}),
     photo: pendingRegPhoto || null,
-    emailVerified: !!(regVerify.verified && regVerify.okEmail === emailLc),
+    emailVerified: false,
     notifyStatus: '', notifyNote: '', notifyAt: ''
   }, extra);
   if(needsPassword) newReg.password = password;
@@ -3364,8 +3740,8 @@ function registerSubmit(){
   resetRegImages();
   regVerify.okEmail = ''; regVerify.verified = false; regVerify.code = '';
   document.querySelectorAll('.role-opt').forEach(r=>r.classList.remove('selected'));
-  document.querySelector('.role-opt[data-role="Player"]').classList.add('selected');
-  applyRoleUI('Player');
+  document.querySelector('.role-opt[data-role="Coach"]').classList.add('selected');
+  applyRoleUI('Coach');
   checkRegName();
 
   showGate('gate-welcome');
@@ -3543,6 +3919,7 @@ function openTourneyDetail(tournamentId){
       <div>
         <h2 style="font-size:20px;">${t.name}</h2>
         <div class="topbar-sub" style="text-transform:none;margin-top:6px;">${t.sport} · ${t.format} · ${t.venue} · ${t.dates}${t.minPlayers ? ` · Min ${t.minPlayers} player(s)/team` : ''}</div>
+        ${tourneyDeadlineLine(t) ? `<div class="topbar-sub" style="text-transform:none;margin-top:4px;">⏰ ${tourneyDeadlineLine(t)}</div>` : ''}
       </div>
       <span class="pill ${t.status==='Ongoing'?'pill-live':t.status==='Upcoming'?'pill-upcoming':'pill-done'}">${t.status}</span>
     </div>
@@ -3809,7 +4186,7 @@ function buildLandingLive(){
     <div class="card ${m.status==='live'?'live-clickable':''}" ${m.status==='live'?`onclick="openLiveViewer(${m.id})"`:''}>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
         <span class="mono" style="color:var(--muted);font-size:12px;">${m.time} · ${m.venue}</span>
-        <span class="pill ${m.status==='live'?'pill-live':'pill-upcoming'}">${m.status==='live'?'Live':'Upcoming'}</span>
+        <span style="display:inline-flex;gap:6px;align-items:center;"><span class="pill ${m.status==='live'?'pill-live':'pill-upcoming'}">${m.status==='live'?'Live':'Upcoming'}</span>${clockBadgeHtml(m)}</span>
       </div>
       <div class="team-cell" style="margin-bottom:8px;"><div class="team-logo" style="background:${colorFor(m.a)}">${initials(m.a)}</div>${m.a}</div>
       <div class="team-cell"><div class="team-logo" style="background:${colorFor(m.b)}">${initials(m.b)}</div>${m.b}</div>
@@ -3852,6 +4229,30 @@ function avatarHtml(r){
   return img ? `<img src="${img}" alt="">` : escH(initials(r ? r.name : ''));
 }
 function hasPlayerDetails(r){ return !!(r && (r.dob || r.school || r.idFront)); }
+/* ---- Profile photo viewer + list-row helpers (display only) ---- */
+function openPhotoViewer(id){
+  const r = registrations.find(x=>x.id === id);
+  const src = r ? safeImg(r.photo) : '';
+  if(!src) return;
+  document.getElementById('photo-viewer-img').src = src;
+  document.getElementById('photo-viewer-name').textContent = r.name || '';
+  document.getElementById('photo-viewer-overlay').classList.add('open');
+}
+function closePhotoViewer(){
+  const el = document.getElementById('photo-viewer-overlay');
+  if(el) el.classList.remove('open');
+}
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closePhotoViewer(); });
+/* Big avatar; tapping it opens the full photo when the person has one. fallbackName is used when there is no registration record. */
+function bigAvatarHtml(r, fallbackName){
+  const has = !!(r && safeImg(r.photo));
+  const inner = r ? avatarHtml(r) : escH(initials(fallbackName || ''));
+  return `<div class="avatar avatar-lg${has ? ' has-photo' : ''}"${has ? ` onclick="event.stopPropagation();openPhotoViewer(${r.id})" title="Tap to view photo"` : ''}>${inner}</div>`;
+}
+function infoLine(label, value, cls){
+  if(value == null || value === '') return '';
+  return `<div class="line${cls ? ' '+cls : ''}">${label ? `<b>${escH(label)}</b>` : ''}${escH(value)}</div>`;
+}
 function myCoachEmailLc(){ return String(currentCoachEmail || '').toLowerCase(); }
 
 /* ================= WHO CAN ACCEPT WHOM =================
@@ -3908,12 +4309,13 @@ function renderRegistrationsAdmin(){
   const countEl = document.getElementById('reg-count');
   updateRegistrationBadges();
   renderEmailStatusCard();
+  renderPlayerWindowCard();
   if(!el) return;
   const help = document.getElementById('reg-help-text');
   if(help){
     help.innerHTML = currentRole === 'official'
       ? `As an <b style="color:var(--text);">Official</b> you accept or reject <b style="color:var(--text);">Coach</b> registrations. Approving one creates the coach's dashboard login using the password they set.`
-      : `As <b style="color:var(--text);">Administrator</b> you accept or reject <b style="color:var(--text);">Official</b> registrations. <b style="color:var(--text);">Players</b> are accepted by their own coach — once accepted they appear here with their full details and ID. <b style="color:var(--text);">Coaches</b> are accepted by an Official.`;
+      : `As <b style="color:var(--text);">Administrator</b> you accept or reject <b style="color:var(--text);">Official</b> registrations. <b style="color:var(--text);">Players</b> are registered by their own coach (inside the registration schedule you set above) — they appear here with their full details and ID. <b style="color:var(--text);">Coaches</b> are accepted by an Official.`;
   }
   const scoped = registrationsInScope();
   const list = regRoleFilter === 'all' ? scoped : scoped.filter(r=>r.role === regRoleFilter);
@@ -3932,11 +4334,17 @@ function renderRegistrationsAdmin(){
     }
     return `
     <div class="reg-row">
-      <div class="reg-meta">
-        <div class="avatar" style="width:40px;height:40px;font-size:14px;">${avatarHtml(r)}</div>
-        <div class="reg-info">
+      <div class="reg-meta rich">
+        ${bigAvatarHtml(r)}
+        <div class="reg-info rich">
           <div class="name">${escH(r.name)} <span class="role-tag" style="margin-left:6px;">${escH(r.role)}</span></div>
-          <div class="sub">${sub} · Registered ${escH(r.date)}</div>
+          <div class="info-list">
+            ${isPlayer
+              ? infoLine('', [r.school, r.yearLevel].filter(Boolean).join(' · '), 'main') + infoLine('Course', r.course) + infoLine('Sport', r.sport) + infoLine('Coach', r.coachName)
+              : infoLine('', [r.team && r.team!=='—' ? r.team : '', r.sport].filter(Boolean).join(' · '), 'main')}
+            ${infoLine('Address', r.address)}
+            ${infoLine('Registered', r.date)}
+          </div>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end;">
@@ -4087,7 +4495,7 @@ function renderCoachPlayerRequests(){
         <button class="btn btn-ghost btn-sm" onclick="rejectRegistration(${r.id})">Reject</button>
       </div>
     </div>`;
-  }).join('') || `<p class="topbar-sub" style="text-transform:none;">No pending player registrations. Players who pick you as their coach will show up here.</p>`;
+  }).join('') || `<p class="topbar-sub" style="text-transform:none;">No pending player requests.</p>`;
 }
 
 /* ================= PLAYER DETAILS MODAL (admin: accepted players · coach: own players) ================= */
@@ -4107,7 +4515,7 @@ function openPlayerDetails(id){
   const photo = safeImg(r.photo);
   body.innerHTML = `
     <div style="display:flex;align-items:center;gap:14px;padding-right:34px;">
-      <div class="avatar" style="width:56px;height:56px;font-size:18px;flex-shrink:0;">${photo ? `<img src="${photo}" alt="">` : escH(initials(r.name))}</div>
+      ${bigAvatarHtml(r)}
       <div style="min-width:0;">
         <h2 style="font-size:19px;line-height:1.2;">${escH(r.name)}</h2>
         <div class="topbar-sub" style="text-transform:none;margin-top:3px;">${escH(r.sport)}${r.team && r.team!=='—' ? ' · '+escH(r.team) : ''}</div>
@@ -4300,6 +4708,7 @@ function buildMyTeam(){
   if(hasTeamWrap) hasTeamWrap.style.display = 'block';
 
   populateAddPlayerSelect();
+  renderCoachRegisterCard();
 
   statsEl.innerHTML = `
     <div class="card stat-card"><span class="stat-label">Roster Size</span><div class="stat-value mono">${team.players.length}</div></div>
@@ -4323,13 +4732,18 @@ function buildMyTeam(){
   rosterCountEl.textContent = `${team.players.length} player(s)`;
   rosterListEl.innerHTML = team.players.map((p,i)=>{
     const pr = rosterRegFor(p);
+    const schoolYear = pr ? [pr.school, pr.yearLevel].filter(Boolean).join(' · ') : '';
     return `
     <div class="reg-row">
-      <div class="reg-meta">
-        <div class="avatar" style="width:36px;height:36px;font-size:13px;">${pr ? avatarHtml(pr) : escH(initials(p))}</div>
-        <div class="reg-info">
+      <div class="reg-meta rich">
+        ${bigAvatarHtml(pr, p)}
+        <div class="reg-info rich">
           <div class="name">${escH(p)}</div>
-          ${pr && pr.school ? `<div class="sub">${escH(pr.school)}${pr.yearLevel ? ' · '+escH(pr.yearLevel) : ''}</div>` : ''}
+          <div class="info-list">
+            ${pr ? infoLine('', schoolYear, 'main') : ''}
+            ${pr ? infoLine('Address', pr.address) : ''}
+            ${pr ? infoLine('Registered', pr.date) : ''}
+          </div>
         </div>
       </div>
       <div style="display:flex;gap:8px;">
@@ -4345,7 +4759,7 @@ function buildMyTeam(){
     <div class="card ${m.status==='live'?'live-clickable':''}" ${m.status==='live'?`onclick="openLiveViewer(${m.id})"`:''}>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
         <span class="mono" style="color:var(--muted);font-size:12px;">${m.time} · ${m.venue}</span>
-        <span class="pill ${m.status==='live'?'pill-live':'pill-upcoming'}">${m.status==='live'?'Live':'Upcoming'}</span>
+        <span style="display:inline-flex;gap:6px;align-items:center;"><span class="pill ${m.status==='live'?'pill-live':'pill-upcoming'}">${m.status==='live'?'Live':'Upcoming'}</span>${clockBadgeHtml(m)}</span>
       </div>
       <div class="team-cell" style="margin-bottom:8px;"><div class="team-logo" style="background:${colorFor(m.a)}">${initials(m.a)}</div>${m.a}</div>
       <div class="team-cell"><div class="team-logo" style="background:${colorFor(m.b)}">${initials(m.b)}</div>${m.b}</div>
@@ -4363,8 +4777,8 @@ function buildMyTeam(){
       let actionHtml = '';
       if(isMine){
         actionHtml = `<span class="pill ${team.status==='Approved'?'pill-upcoming':'pill-live'}">${team.status}</span>`;
-      } else if(!t.regOpen){
-        actionHtml = `<span class="topbar-sub" style="text-transform:none;margin:0;">Registration closed</span>`;
+      } else if(!tourneyRegOpen(t)){
+        actionHtml = `<span class="topbar-sub" style="text-transform:none;margin:0;">${tourneyRegState(t)==='deadline' ? 'Registration deadline has passed' : 'Registration closed'}</span>`;
       } else if(approvedCount >= t.teams){
         actionHtml = `<span class="topbar-sub" style="text-transform:none;margin:0;">Full (${t.teams}/${t.teams})</span>`;
       } else if(shortOfMin){
@@ -4380,6 +4794,7 @@ function buildMyTeam(){
         </div>
         <h3 style="font-size:15px;cursor:pointer;" onclick="openTourneyDetail(${t.id})">${t.name}</h3>
         <div class="topbar-sub" style="text-transform:none;margin:6px 0 10px;">${t.sport} · ${t.venue} · ${t.dates}</div>
+      ${tourneyDeadlineLine(t) ? `<div style="font-size:11.5px;color:var(--muted-2);margin-bottom:10px;">⏰ ${tourneyDeadlineLine(t)}</div>` : ''}
         <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">${approvedCount}/${t.teams} teams joined${minPlayers ? ` · Min ${minPlayers} player(s)/team` : ''}</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
           <button class="btn btn-ghost btn-sm" onclick="openTourneyDetail(${t.id})">View Teams</button>
@@ -4565,22 +4980,32 @@ function buildDashboardUpdates(){
 }
 
 function buildTourneyList(filter){
+  const keptDeadlines = {};
+  document.querySelectorAll('input[data-td]').forEach(i=>{ if(i.value !== i.defaultValue) keptDeadlines[i.dataset.td] = i.value; });
   const list = filter==='all' ? tournaments : tournaments.filter(t=>t.status===filter);
   const myTeam = currentRole==='coach' ? getMyTeam() : null;
 
   document.getElementById('tourney-list').innerHTML = list.map(t=>{
     let actionHtml = '';
     if(currentRole === 'admin'){
-      actionHtml = `<button class="btn btn-danger btn-sm btn-block" onclick="deleteTournament(${t.id})">Delete Tournament</button>`;
+      const rs = tourneyRegState(t);
+      actionHtml = `
+        <div class="field" style="margin-bottom:8px;"><label>Team registration deadline · <span style="color:${rs==='open'?'var(--mint)':'var(--danger)'};">${rs==='open'?'OPEN':'CLOSED'}</span></label>
+          <input type="datetime-local" data-td="${t.id}" value="${escAttr(t.regDeadline || '')}"></div>
+        <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+          <button class="btn btn-primary btn-sm" style="flex:1;" onclick="saveTourneyDeadline(${t.id})">Save deadline</button>
+          ${rs==='open' ? `<button class="btn btn-ghost btn-sm" onclick="closeTourneyRegistration(${t.id})">Close now</button>` : ''}
+        </div>
+        <button class="btn btn-danger btn-sm btn-block" onclick="deleteTournament(${t.id})">Delete Tournament</button>`;
     } else if(currentRole === 'coach'){
       if(!myTeam){
         actionHtml = `<p class="topbar-sub" style="text-transform:none;margin:0;">You need to create a team before joining. Go to My Team.</p>`;
       } else if(myTeam.tournament === t.name){
         actionHtml = `<span class="pill ${myTeam.status==='Approved'?'pill-upcoming':'pill-live'}">${myTeam.name} — ${myTeam.status}</span>`;
-      } else if(t.regOpen){
+      } else if(tourneyRegOpen(t)){
         actionHtml = `<button class="btn btn-primary btn-sm btn-block" onclick="registerTeamForTournament(${t.id})">Register My Team</button>`;
       } else {
-        actionHtml = `<span class="topbar-sub" style="text-transform:none;margin:0;">Registration closed</span>`;
+        actionHtml = `<span class="topbar-sub" style="text-transform:none;margin:0;">${tourneyRegState(t)==='deadline' ? 'Registration deadline has passed' : 'Registration closed'}</span>`;
       }
     }
     return `
@@ -4594,12 +5019,14 @@ function buildTourneyList(filter){
       <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-bottom:12px;">
         <span>${t.teams} teams</span><span>${t.dates}</span>
       </div>
+      ${tourneyDeadlineLine(t) ? `<div style="font-size:11.5px;color:var(--muted-2);margin-bottom:10px;">⏰ ${tourneyDeadlineLine(t)}</div>` : ''}
       ${currentRole==='admin' ? `<div style="font-size:11.5px;color:var(--muted-2);margin-bottom:10px;">Official: ${officialNameByEmail(t.assignedOfficial) || 'Unassigned'}</div>` : ''}
       ${currentRole==='official' && isAssignedOfficial(t) ? `<div style="font-size:11.5px;color:var(--mint);margin-bottom:10px;">✓ Assigned to you</div>` : ''}
       <button class="btn btn-ghost btn-sm btn-block" style="margin-bottom:${actionHtml?'10px':'0'};" onclick="openTourneyDetail(${t.id})">View Teams</button>
       ${actionHtml}
     </div>`;
   }).join('') || `<p class="topbar-sub" style="text-transform:none;">No tournaments in this category.</p>`;
+  document.querySelectorAll('input[data-td]').forEach(i=>{ if(keptDeadlines[i.dataset.td] !== undefined) i.value = keptDeadlines[i.dataset.td]; });
 }
 function registerTeamForTournament(tournamentId){
   const t = tournaments.find(t=>t.id===tournamentId);
@@ -4609,6 +5036,7 @@ function registerTeamForTournament(tournamentId){
 
   // Tournament must be fully set up by admin and open before a coach can join it.
   if(!t.published){ showToast('This tournament is not yet published by the admin.'); return; }
+  if(tourneyRegState(t) === 'deadline'){ showToast(`The registration deadline for ${t.name} has passed (${fmtDateTime(t.regDeadline)}). Only the Administrator can reopen it.`); buildTourneyList(document.querySelector('#tourney-tabs .tab-btn.active')?.dataset.filter || 'all'); buildMyTeam(); return; }
   if(!t.regOpen){ showToast('Registration for this tournament is closed.'); return; }
 
   if(team.tournament === t.name){ showToast(`${team.name} is already registered for ${t.name}.`); return; }
@@ -5250,6 +5678,7 @@ function addMatch(){
   // Tagging the tournament here is what lets the assigned official's live-score QR button show up
   // for this match too, same as admin — canQr in buildSchedule() checks it via canManageTournament.
   schedule.push({id: scheduleIdCounter, time, a, b, venue, status, day, tournament});
+  if(status === 'live') startNewLiveChatSession(schedule[schedule.length-1]);
   if(status === 'live') syncTournamentLiveStatus(tournament);
   schedule.sort((x,y)=> x.time.localeCompare(y.time));
   document.getElementById('new-match-time').value='';
@@ -5287,7 +5716,9 @@ function saveMatch(id){
   }
   // Tagging (or fixing) the tournament here is what lets the assigned official's live-score QR
   // button show up for this match, same as admin — buildSchedule()'s canQr depends on it.
+  const wasLive = m.status === 'live';
   Object.assign(m, {time, a, b, venue, status, tournament});
+  if(status === 'live' && !wasLive) startNewLiveChatSession(m);
   if(status === 'live') syncTournamentLiveStatus(tournament);
   schedule.sort((x,y)=> x.time.localeCompare(y.time));
   editingMatchId = null;
@@ -5861,6 +6292,7 @@ function generateTourney(){
   const endDate = document.getElementById('gen-end').value;
   const venue = document.getElementById('gen-venue').value.trim();
   const minPlayers = parseInt(document.getElementById('gen-min-players').value) || 0;
+  const regDeadline = (document.getElementById('gen-reg-deadline') || {}).value || '';
   const formatEl = document.querySelector('#format-grid .format-opt.selected');
   const format = formatEl ? formatEl.querySelector('h3').textContent : 'Round Robin';
 
@@ -5876,28 +6308,37 @@ function generateTourney(){
     showToast('Minimum players per team must be at least 1.');
     return;
   }
+  if(!regDeadline){
+    showToast('Set the team registration deadline.');
+    return;
+  }
+  if(isNaN(new Date(regDeadline).getTime()) || new Date(regDeadline).getTime() <= Date.now()){
+    showToast('The team registration deadline must be a date and time in the future.');
+    return;
+  }
 
   tourneyIdCounter += 1;
   const dates = `${fmtShortDate(startDate)}–${fmtShortDate(endDate)}`;
   const initialStatus = computeInitialTourneyStatus(startDate);
   tournaments.push({
     id: tourneyIdCounter, name, sport, status:initialStatus, teams: teamsCount,
-    venue, dates, startDate, endDate, format, minPlayers, regOpen:true, published:true
+    venue, dates, startDate, endDate, format, minPlayers, regOpen:true, regDeadline, published:true
   });
 
   // Notify coaches (and everyone else) — shows up on the Dashboard and My Team announcement feeds.
   // Coaches see this clearly flagged as an open-for-registration tournament they can apply to.
   const notifTitle = `📢 New Tournament Open for Registration: ${name}`;
-  const notifMsg = `Coaches: ${sport} · ${format} · ${dates} at ${venue}. Teams need at least ${minPlayers} player(s) on the roster to join. Registration is now open — go to My Team or Tournaments and tap "Join" once you've created your team. Your team will be marked Pending until an admin approves it.`;
+  const notifMsg = `Coaches: ${sport} · ${format} · ${dates} at ${venue}. Teams need at least ${minPlayers} player(s) on the roster to join. Registration is now open until ${fmtDateTime(regDeadline)} — go to My Team or Tournaments and tap "Join" once you've created your team. Your team will be marked Pending until an admin approves it.`;
   announcements.unshift({id: fsIdCounter++, t: notifTitle, d: notifMsg, forCoaches:true});
   sentNotifications.unshift({type:'Tournament Announcement', title: notifTitle, msg: notifMsg, when: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})});
-  logAudit('Tournament Created', `"${name}" created (${sport} · ${format} · min ${minPlayers} player(s)/team) — registration opened, coaches notified.`, 'Administrator');
+  logAudit('Tournament Created', `"${name}" created (${sport} · ${format} · min ${minPlayers} player(s)/team) — team registration open until ${fmtDateTime(regDeadline)}, coaches notified.`, 'Administrator');
 
   // Reset the form
   document.getElementById('gen-name').value = '';
   document.getElementById('gen-teams').value = '8';
   document.getElementById('gen-venue').value = '';
   document.getElementById('gen-min-players').value = '5';
+  const genDl = document.getElementById('gen-reg-deadline'); if(genDl) genDl.value = '';
   resetGenDateFields();
 
   // Refresh every screen that lists tournaments so the new one shows up immediately
@@ -7002,7 +7443,9 @@ function repServeSuspensionsForMatch(m){
 function matchPillHtml(m){
   if(m.status==='postponed') return '<span class="pill" style="background:rgba(255,184,77,0.16);color:#FFB84D;">Postponed</span>';
   if(m.status==='cancelled') return '<span class="pill" style="background:rgba(255,77,109,0.14);color:var(--danger);">Cancelled</span>';
-  return `<span class="pill ${m.status==='live'?'pill-live':m.status==='done'?'pill-done':'pill-upcoming'}">${m.status==='live'?'Live':m.status==='done'?(m.outcome==='forfeit'?'Forfeit':'Accomplish'):'Upcoming'}</span>`;
+  const pillHtml = `<span class="pill ${m.status==='live'?'pill-live':m.status==='done'?'pill-done':'pill-upcoming'}">${m.status==='live'?'Live':m.status==='done'?(m.outcome==='forfeit'?'Forfeit':'Accomplish'):'Upcoming'}</span>`;
+  const clockHtml = clockBadgeHtml(m);
+  return clockHtml ? `<span style="display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;">${pillHtml}${clockHtml}</span>` : pillHtml;
 }
 
 function exportToast(type){
@@ -7145,6 +7588,7 @@ function saveLiveLink(goLive){
   if(goLive && !url){ showToast('Paste a YouTube or Facebook live link first.'); return; }
   m.liveUrl = url || '';
   if(goLive){
+    if(m.status !== 'live') startNewLiveChatSession(m);
     m.status = 'live';
     syncTournamentLiveStatus(m.tournament);
   }
@@ -7315,6 +7759,7 @@ function renderPublicLiveMatch(){
     updateBtn.style.display = 'none';
     statusEl.style.display = 'none';
     if(videoEl){ renderLiveVideoInto(videoEl, null); videoEl.style.display = 'none'; }
+    renderPublicClock(null);
     venueEl.textContent = 'This match may have been removed.';
     return;
   }
@@ -7354,6 +7799,7 @@ function renderPublicLiveMatch(){
     endBtn.style.display = 'block';
     finalNote.style.display = 'none';
   }
+  renderPublicClock(m);
 }
 /* Anyone who has the link can update the score from here — that's the point of handing this
    page out via QR at courtside. currentRole is usually 'spectator' on a freshly opened link
@@ -7370,7 +7816,7 @@ function savePublicLiveScore(){
   m.scoreA = rawA === '' ? null : Number(rawA);
   m.scoreB = rawB === '' ? null : Number(rawB);
   // Entering a score on an upcoming match is a natural "it's started" signal.
-  if(m.status === 'upcoming' && (m.scoreA!=null || m.scoreB!=null)) m.status = 'live';
+  if(m.status === 'upcoming' && (m.scoreA!=null || m.scoreB!=null)){ m.status = 'live'; startNewLiveChatSession(m); }
   if(m.status === 'live') syncTournamentLiveStatus(m.tournament);
   syncScoreToBracket(m);
   logAudit('Score Updated', `${m.a} ${m.scoreA ?? '—'} - ${m.scoreB ?? '—'} ${m.b}${m.tournament ? ' ('+m.tournament+')' : ''}.`, liveScoreActorLabel());
@@ -7400,6 +7846,7 @@ function endPublicLiveMatch(){
   }
   m.scoreA = scoreA;
   m.scoreB = scoreB;
+  clockStopForEnd(m); // game clock stops when the match is ended
   m.status = 'done';
   syncScoreToBracket(m); // determines the higher-score winner and advances them into the bracket's TBA slot
   syncStandingsForMatch(m); // credits the win/loss (and the winner's point) to Standings
@@ -7410,6 +7857,228 @@ function endPublicLiveMatch(){
   buildDashboard();
   renderPublicLiveMatch();
   showToast(`Match ended — ${winnerName} advances in the bracket ✓`);
+}
+
+/* ---------------- GAME CLOCK (new feature) ----------------
+   Basketball, Football and Futsal get a game clock that the person handling the live score
+   controls from the live-score page (Start Game / Pause / Resume / Next Period / Adjust).
+   It is stored on the match itself as m.clock, which already syncs through the schedule doc —
+   so NO extra Firestore collection and NO per-second writes. Only start / pause / period
+   changes are saved; every screen (live viewer, schedule, cards) then counts the time locally
+   from the saved start timestamp, so everyone sees the same time without any further traffic.
+   Sports not listed in GAME_CLOCK_RULES (Volleyball, Badminton, Chess, Esports) are point/set
+   based, so they get no clock and behave exactly as before.
+   m.clock = {started, running, period, elapsed (ms already played in this period),
+              startedAt (epoch ms when it was last resumed), minutes (custom period length or null)} */
+const GAME_CLOCK_RULES = {
+  Basketball:{periods:4, minutes:10, dir:'down', names:['Q1','Q2','Q3','Q4'], otMinutes:5, otName:'OT', desc:'4 quarters × 10 min · countdown'},
+  Football:  {periods:2, minutes:45, dir:'up',   names:['1st Half','2nd Half'], otMinutes:15, otName:'Extra Time', desc:'2 halves × 45 min · running time'},
+  Futsal:    {periods:2, minutes:20, dir:'down', names:['1st Half','2nd Half'], otMinutes:5, otName:'Extra Time', desc:'2 halves × 20 min · countdown'}
+};
+function clockRuleFor(m){
+  if(!m) return null;
+  return GAME_CLOCK_RULES[repSportOfMatch(m)] || null;
+}
+function clockEnsure(m){
+  if(!m.clock || typeof m.clock !== 'object') m.clock = {started:false, running:false, period:1, elapsed:0, startedAt:null, minutes:null};
+  return m.clock;
+}
+function clockPeriodLen(m, p){
+  const rule = clockRuleFor(m); if(!rule) return 0;
+  const c = m.clock || {};
+  return (p <= rule.periods ? (Number(c.minutes) > 0 ? Number(c.minutes) : rule.minutes) : rule.otMinutes) * 60000;
+}
+function clockBaseMs(m, p){ // for count-up sports: minutes already played in earlier periods
+  let s = 0;
+  for(let i=1;i<p;i++) s += clockPeriodLen(m, i);
+  return s;
+}
+function clockPeriodName(m, p){
+  const rule = clockRuleFor(m); if(!rule) return '';
+  if(p <= rule.periods) return rule.names[p-1] || ('P'+p);
+  const n = p - rule.periods;
+  return n === 1 ? rule.otName : `${rule.otName} ${n}`;
+}
+function clockElapsed(m){
+  const c = m.clock; if(!c) return 0;
+  return (Number(c.elapsed) || 0) + (c.running && c.startedAt ? Math.max(0, Date.now() - c.startedAt) : 0);
+}
+function clockFmt(secs){
+  secs = Math.max(0, secs);
+  const mm = Math.floor(secs/60), ss = secs % 60;
+  return String(mm).padStart(2,'0') + ':' + String(ss).padStart(2,'0');
+}
+function clockDisplay(m){
+  const rule = clockRuleFor(m); if(!rule) return null;
+  const c = m.clock || {};
+  const p = c.period || 1;
+  const len = clockPeriodLen(m, p);
+  const el = clockElapsed(m);
+  let secs, over = false;
+  if(rule.dir === 'down'){
+    const rem = Math.max(0, len - el);
+    secs = Math.ceil(rem/1000);
+    over = rem === 0 && !!c.started;
+  } else {
+    secs = Math.floor((clockBaseMs(m, p) + el)/1000);
+  }
+  return {time: clockFmt(secs), label: clockPeriodName(m, p), period: p, running: !!c.running && m.status === 'live', started: !!c.started, over, dir: rule.dir};
+}
+function clockFullText(m){
+  const d = clockDisplay(m); if(!d) return '';
+  if(m.status === 'done') return 'FINAL';
+  return `${d.running ? '⏱' : '⏸'} ${d.label} · ${d.time}${d.over ? ' · END' : ''}`;
+}
+function clockBadgeHtml(m){
+  if(!m || m.status !== 'live' || !m.clock || !m.clock.started || !clockRuleFor(m)) return '';
+  return `<span class="pill pill-clock" data-clock="${m.id}">${clockFullText(m)}</span>`;
+}
+/* One light 1-second ticker updates every clock element on screen (viewer, cards, schedule,
+   live-score page) from the match's saved timestamps — no network involved. */
+function tickGameClocks(){
+  const els = document.querySelectorAll('[data-clock]');
+  if(!els.length) return;
+  els.forEach(el=>{
+    const id = el.getAttribute('data-clock');
+    if(!id) return;
+    const m = schedule.find(s=>String(s.id) === id);
+    if(!m) return;
+    const d = clockDisplay(m); if(!d) return;
+    el.textContent = el.getAttribute('data-clock-mode') === 'time' ? d.time : clockFullText(m);
+    el.classList.toggle('paused', !d.running && m.status !== 'done');
+    el.classList.toggle('end', d.over);
+  });
+}
+setInterval(tickGameClocks, 1000);
+
+/* ----- controls on the live-score page ----- */
+function publicClockMatch(){
+  const m = schedule.find(s=>s.id === publicLiveMatchId);
+  if(!m || !clockRuleFor(m)) return null;
+  if(m.status === 'done' || m.status === 'cancelled' || m.status === 'postponed'){ showToastOnly('This match is not in play anymore.'); return null; }
+  return m;
+}
+function clockCommit(m, msg){
+  buildSchedule();
+  buildDashboard();
+  renderPublicLiveMatch();
+  if(liveViewerMatchId) renderLiveViewer();
+  tickGameClocks();
+  showToastOnly(msg);
+  // Save right away (instead of waiting for the usual 1.5s batching) so viewers see the change at once.
+  try{ clearTimeout(persistTimer); persistAll(); }catch(e){}
+}
+function clockToggle(){
+  const m = publicClockMatch(); if(!m) return;
+  const c = clockEnsure(m);
+  if(c.running){
+    c.elapsed = clockElapsed(m);
+    c.running = false;
+    c.startedAt = null;
+    clockCommit(m, '⏸ Clock paused');
+    return;
+  }
+  const first = !c.started;
+  if(m.status === 'upcoming'){
+    m.status = 'live'; // pressing Start Game is the "it's started" signal, same as entering a first score
+    startNewLiveChatSession(m);
+    syncTournamentLiveStatus(m.tournament);
+    syncScoreToBracket(m);
+  }
+  c.running = true;
+  c.started = true;
+  c.startedAt = Date.now();
+  if(first) logAudit('Game Started', `${m.a} vs ${m.b}${m.tournament ? ' ('+m.tournament+')' : ''} — ${clockPeriodName(m, c.period || 1)} clock started.`, liveScoreActorLabel());
+  clockCommit(m, first ? '▶ Game started — clock is running and live for viewers ✓' : '▶ Clock resumed');
+}
+function clockNextPeriod(){
+  const m = publicClockMatch(); if(!m) return;
+  const c = clockEnsure(m);
+  c.period = (c.period || 1) + 1;
+  c.elapsed = 0;
+  c.running = false;
+  c.startedAt = null;
+  c.started = true;
+  logAudit('Period Changed', `${m.a} vs ${m.b} — now ${clockPeriodName(m, c.period)}.`, liveScoreActorLabel());
+  clockCommit(m, `⏭ ${clockPeriodName(m, c.period)} ready — press Resume to start the clock`);
+}
+function clockResetPeriod(){
+  const m = publicClockMatch(); if(!m) return;
+  if(!confirm('Reset the clock of the current period back to its start?')) return;
+  const c = clockEnsure(m);
+  c.elapsed = 0;
+  c.running = false;
+  c.startedAt = null;
+  clockCommit(m, '↺ Period clock reset');
+}
+function clockAdjust(){
+  const m = publicClockMatch(); if(!m) return;
+  const rule = clockRuleFor(m);
+  const c = clockEnsure(m);
+  const d = clockDisplay(m);
+  const raw = prompt(rule.dir === 'down' ? 'Set the time REMAINING in this period (mm:ss):' : 'Set the match time (mm:ss):', d.time);
+  if(raw === null) return;
+  const mt = String(raw).trim().match(/^(\d{1,3})(?::([0-5]?\d))?$/);
+  if(!mt){ showToastOnly('Use the format mm:ss — for example 07:30.'); return; }
+  const target = (Number(mt[1]) * 60 + Number(mt[2] || 0)) * 1000;
+  const p = c.period || 1;
+  const len = clockPeriodLen(m, p);
+  let elapsed = rule.dir === 'down' ? len - target : target - clockBaseMs(m, p);
+  elapsed = Math.max(0, rule.dir === 'down' ? Math.min(len, elapsed) : elapsed);
+  c.elapsed = elapsed;
+  if(c.running) c.startedAt = Date.now();
+  c.started = true;
+  clockCommit(m, '✎ Clock time adjusted');
+}
+function clockSetMinutes(val){
+  const m = publicClockMatch(); if(!m){ renderPublicClock(schedule.find(s=>s.id===publicLiveMatchId)); return; }
+  const c = clockEnsure(m);
+  if(c.running){ showToastOnly('Pause the clock first before changing the period length.'); renderPublicClock(m); return; }
+  const n = Number(val);
+  if(!(n >= 1 && n <= 90)){ showToastOnly('Enter 1 to 90 minutes.'); renderPublicClock(m); return; }
+  c.minutes = n;
+  clockCommit(m, `Period length set to ${n} min`);
+}
+/* Freezes a running clock — used when a match is ended so it can never keep counting afterwards. */
+function clockStopForEnd(m){
+  if(m && m.clock && m.clock.running){
+    m.clock.elapsed = clockElapsed(m);
+    m.clock.running = false;
+    m.clock.startedAt = null;
+  }
+}
+function renderPublicClock(m){
+  const panel = document.getElementById('public-live-clock-panel');
+  if(!panel) return;
+  const rule = m ? clockRuleFor(m) : null;
+  if(!m || !rule || m.status === 'cancelled' || m.status === 'postponed'){ panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+  const c = m.clock || {};
+  const done = m.status === 'done';
+  const d = clockDisplay(m);
+  document.getElementById('public-clock-rule').textContent = `${repSportOfMatch(m)} · ${rule.desc}`;
+  document.getElementById('public-clock-period').textContent = d.label;
+  const timeEl = document.getElementById('public-clock-time');
+  timeEl.setAttribute('data-clock', m.id);
+  timeEl.textContent = d.time;
+  timeEl.classList.toggle('paused', !d.running && !done);
+  timeEl.classList.toggle('end', d.over);
+  const note = document.getElementById('public-clock-note');
+  note.textContent = done ? 'Match ended — clock stopped.'
+    : !c.started ? 'Press Start Game when the match begins — viewers will see the clock live.'
+    : d.running ? 'Clock is running for all viewers.'
+    : d.over ? `${d.label} has ended — press Next Period.`
+    : 'Clock is paused.';
+  document.getElementById('public-clock-controls').style.display = done ? 'none' : 'flex';
+  document.getElementById('public-clock-setting').style.display = done ? 'none' : 'flex';
+  const toggle = document.getElementById('clock-btn-toggle');
+  toggle.textContent = !c.started ? '▶ Start Game' : d.running ? '⏸ Pause' : '▶ Resume';
+  const nextBtn = document.getElementById('clock-btn-next');
+  nextBtn.textContent = `⏭ Next: ${clockPeriodName(m, (c.period || 1) + 1)}`;
+  nextBtn.style.display = c.started ? '' : 'none';
+  const mins = document.getElementById('public-clock-minutes');
+  if(document.activeElement !== mins) mins.value = (Number(c.minutes) > 0 ? Number(c.minutes) : rule.minutes);
+  mins.disabled = !!d.running;
 }
 
 /* ---------------- LIVE VIEWER (new feature) ---------------- */
@@ -7442,7 +8111,21 @@ function renderLiveViewer(){
   const slot = document.getElementById('live-viewer-video');
   const hasVideo = renderLiveVideoInto(slot, m);
   if(stage) stage.classList.toggle('has-video', hasVideo);
+  // A new live just started for this match (new chat session) while someone is watching:
+  // switch to the fresh chat right away so guests' comments refresh without reloading.
+  if(liveChatListenerKey !== null && liveChatListenerKey !== liveChatKeyFor(m.id)){
+    liveChatByMatch[m.id] = [];
+    startLiveChatListener(m.id);
+    renderLiveChat();
+  }
   refreshLiveChatUI(); // keeps the cheer buttons' team names current
+  const clockEl = document.getElementById('live-viewer-clock');
+  if(clockEl){
+    const showClock = isLive && !!clockRuleFor(m) && !!(m.clock && m.clock.started);
+    clockEl.style.display = showClock ? '' : 'none';
+    clockEl.setAttribute('data-clock', showClock ? m.id : '');
+    if(showClock){ clockEl.textContent = clockFullText(m); tickGameClocks(); }
+  }
 
   const label = document.getElementById('live-stage-label');
   const preview = document.getElementById('live-stage-preview');
@@ -7504,14 +8187,29 @@ function loadLiveChatName(){
 function saveLiveChatName(n){
   try{ localStorage.setItem(LIVE_CHAT_NAME_KEY, n); }catch(e){}
 }
+/* FRESH CHAT PER LIVE: every time a match goes live, it gets a new m.chatSession stamp (see
+   startNewLiveChatSession). The chat for that live is stored under  liveChat/{matchId_session}/messages,
+   so guests start each live with a clean chat and the previous live's comments are left untouched
+   (not deleted). Matches that have no chatSession yet (e.g. already live before this update) keep
+   using the original  liveChat/{matchId}/messages  path, so nothing changes for them. */
+function startNewLiveChatSession(m){
+  m.chatSession = Date.now();
+}
+function liveChatKeyFor(matchId){
+  const m = schedule.find(s=>s.id === matchId);
+  return (m && m.chatSession) ? `${m.id}_${m.chatSession}` : String(matchId);
+}
+let liveChatListenerKey = null; // which chat path the open viewer is currently listening to
 function liveChatCol(matchId){
-  return db.collection('liveChat').doc(String(matchId)).collection('messages');
+  return db.collection('liveChat').doc(liveChatKeyFor(matchId)).collection('messages');
 }
 function stopLiveChatListener(){
   if(liveChatUnsub){ try{ liveChatUnsub(); }catch(e){} liveChatUnsub = null; }
+  liveChatListenerKey = null;
 }
 function startLiveChatListener(matchId){
   stopLiveChatListener();
+  liveChatListenerKey = liveChatKeyFor(matchId);
   liveChatError = '';
   try{
     liveChatUnsub = liveChatCol(matchId).orderBy('ts').limitToLast(100).onSnapshot(snap=>{
