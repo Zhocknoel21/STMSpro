@@ -800,6 +800,14 @@ tr:hover td{background:rgba(76,141,255,0.03);}
 .info-list .line{color:var(--muted);font-size:12.5px;line-height:1.4;word-break:break-word;}
 .info-list .line.main{color:var(--text);font-size:13px;font-weight:500;}
 .info-list .line b{color:var(--muted-2);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin-right:5px;}
+/* Coach > My Team > Roster: players shown as cards in columns (instead of a one-per-row list) */
+.roster-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;}
+.roster-grid > p{grid-column:1 / -1;}
+.roster-card{display:flex;flex-direction:column;gap:16px;min-width:0;padding:22px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,0.03);}
+.roster-card .reg-meta.rich{flex-direction:column;align-items:flex-start;gap:14px;flex:0 1 auto;}
+.roster-card .avatar.avatar-lg{width:96px;height:96px;border-radius:20px;font-size:30px;}
+.roster-card .reg-info.rich{width:100%;}
+.roster-card .roster-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;}
 .photo-viewer-overlay{
   display:none;position:fixed;inset:0;z-index:950;background:rgba(2,4,10,0.92);
   backdrop-filter:blur(8px);align-items:center;justify-content:center;flex-direction:column;padding:20px;cursor:zoom-out;
@@ -1869,7 +1877,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
               </div>
               <div class="field" style="display:flex;align-items:flex-end;"><button class="btn btn-primary btn-block" onclick="addPlayerToMyTeam()">Add to Roster</button></div>
             </div>
-            <div id="myteam-roster-list"></div>
+            <div id="myteam-roster-list" class="roster-grid"></div>
           </div>
 
           <div class="section-head">
@@ -4734,7 +4742,7 @@ function buildMyTeam(){
     const pr = rosterRegFor(p);
     const schoolYear = pr ? [pr.school, pr.yearLevel].filter(Boolean).join(' · ') : '';
     return `
-    <div class="reg-row">
+    <div class="roster-card">
       <div class="reg-meta rich">
         ${bigAvatarHtml(pr, p)}
         <div class="reg-info rich">
@@ -4746,7 +4754,7 @@ function buildMyTeam(){
           </div>
         </div>
       </div>
-      <div style="display:flex;gap:8px;">
+      <div class="roster-actions">
         ${pr && hasPlayerDetails(pr) ? `<button class="btn btn-outline-mint btn-sm" onclick="openPlayerDetails(${pr.id})">Details</button>` : ''}
         <button class="btn btn-danger btn-sm" onclick="removePlayerFromMyTeam(${i})">Remove</button>
       </div>
